@@ -1,4 +1,57 @@
+script "BobFarm.ash";
+//notify ShaBob;
+import <EatDrink.ash>;
+import <OCD Inventory Control.ash>;
 
+
+string CONSUME_SCRIPT = vars["bobFarm_consume_script"];
+int VERBOSITY = vars["bobFarm_verbosity"].to_int();
+
+
+void announce(int verbosity_level, string message, boolean header)
+	{
+	/*	Prints <message> if the user's verbosity setting is greater than or equal to 
+		<verbosity_level>. 
+		Red = error, blue = normal info, purple = function name, olive = internal function info.
+		If the optional parameter <header> is true prints a line across the mafia gCLI under the
+		message. */
+	string colour;
+	switch (verbosity_level)
+		{
+		case -1:
+			colour = "red";
+			break;
+		case 1:
+			colour = "blue";
+			break;
+		case 2:
+			colour = "purple";
+			break;
+		case 3:
+			colour = "olive";
+			break;
+		}
+	
+	if(verbosity_level <=  VERBOSITY)
+		{
+		if(header)
+			print("");
+		print(message, colour);
+		if(header)	
+			print_html("<hr>");
+		}
+	}
+	
+void announce(int verbosity_level, string message)
+	{
+	/* Overloader for the three parameter version */
+	announce(verbosity_level, message, false);
+	}
+
+void failure(string message)
+	{
+	abort(message);
+	}
 
 
 void fill_organs()
@@ -16,41 +69,19 @@ void fill_organs()
 		{
 		announce(3, "Fullness: "+ my_fullness()); ###
 		
-		// Eat a cookie if no current counters and if doing SRs
-		if(DOSEMIRARES && my_fullness() < fullness_limit())
-			{
-			cookie_room = num_srs();
-	
-			// If you don't have an active SR counter eat a cookie
-			if(!sr_counter_active())
-				{
-				retrieve_item(1, $item[fortune cookie]);
-				eatsilent(1, $item[fortune cookie]);
-				
-				cookie_room = max(0, cookie_room-1); // Avoid getting a negative number
-				}
-			}
-		
 		// Get ode if necessary
 		if(have_effect($effect[ode to booze]) < (inebriety_limit() - my_inebriety()))
 			{
-			// Make room
-			if(head_full())
-				if(!equip_song_raisers())
-					cli_execute("shrug "+ cheapest_at_buff().to_string());
-			
 			if(!have_skill($skill[the ode to booze]))
 				request_buff($effect[ode to booze], inebriety_limit());
 			}
 		
-		announce(3, "Cookie_room is currently "+ cookie_room);
-		
-		if(CONSUME_SCRIPT == "eatdrink.ash")
-			eatdrink(fullness_limit()-cookie_room, inebriety_limit(), spleen_limit(), false);
+		if(CONSUME_SCRIPT == "EatDrink.ash")
+			eatdrink(fullness_limit(), inebriety_limit(), spleen_limit(), false);
 		else
 			cli_execute("run "+ CONSUME_SCRIPT);
 		
-		if(my_fullness() < fullness_limit()-cookie_room || my_inebriety() < inebriety_limit() || my_spleen_use() < spleen_limit())
+		if(my_fullness() < fullness_limit() || my_inebriety() < inebriety_limit() || my_spleen_use() < spleen_limit())
 			failure(CONSUME_SCRIPT +" failed to fill your organs completely");	
 			
 		if(have_effect($effect[ode to booze]) > 0)	
@@ -59,3 +90,4 @@ void fill_organs()
 	else
 		announce(3, "Your organs are already full");
 	}
+
