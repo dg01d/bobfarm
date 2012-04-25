@@ -40,14 +40,14 @@ void endSale()
 void main()
 	{
 	print_html("<b>Starting by Calling EatDrink.ash.</b>");
-//	eatdrink ( fullness_limit(), inebriety_limit(), spleen_limit(), FALSE );//use up any remaining diet room
+	eatdrink ( fullness_limit(), inebriety_limit(), spleen_limit(), FALSE );//use up any remaining diet room
 	print_html("Putting on the Meat Gear.");
-//	maximize ("meat", false );
+	maximize ("meat", false );
 	print_html("Going out to fight the good fight.");
-//	adventure(my_adventures(), $location[giant's castle] );
+	adventure(my_adventures(), $location[giant's castle] );
 	print_html("Right. Farming complete, now to market, to market.");
 	endSale();
-	print_html("<b>Calling EatDrink for your rollover pleasure.</b>");	
+//	print_html("<b>Calling EatDrink for your rollover pleasure.</b>");	
 //	eatdrink ( fullness_limit(), inebriety_limit(), spleen_limit(), TRUE );//use up any remaining diet room	
 	}
 	
