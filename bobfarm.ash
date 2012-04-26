@@ -34,7 +34,7 @@ void endSale()
 		autosell((item_amount($item[thin black candle])-3), $item[thin black candle]);
 		}
 	print_html("Using " + (item_amount($item[warm subject gift certificate])).to_int() + " Warm Subject Gift Certificate");
-	use(item_amount($item[thin black candle]), $item[thin black candle]);
+	use(item_amount($item[warm subject gift certificate]), $item[warm subject gift certificate]);
 	}
 
 
